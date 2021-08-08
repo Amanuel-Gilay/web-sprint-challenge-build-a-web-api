@@ -1,6 +1,6 @@
 const express = require('express');
 const Projects = require('./projects-model');
-const { validateProjectsId, validatePoject } = require('./projects-middleware')
+const { validateProjectsId,validatePoject } = require('./projects-middleware')
 const router = express.Router();
 
 router.get('/', (req, res, next) => {
@@ -12,7 +12,7 @@ router.get('/', (req, res, next) => {
 })
 
 
-router.get('/:id', validateProjectsId, (req, res, next) => {
+router.get('/:id', validateProjectsId, (req, res) => {
     res.json(req.Projects)
 })
 
@@ -42,9 +42,9 @@ router.put('/:id', async (req, res, next) => {
 })
       
 
-router.delete('/:id',async (req, res, next ) => {
+router.delete('/:id',validateProjectsId, async (req, res, next ) => {
 try {
- await Project.remove(req.params.id)
+ await Projects.remove(req.params.id)
     res.json(req.project)
 } catch (err) {
   next(err)
@@ -52,4 +52,20 @@ try {
       
   });
 
-module.exports = server;
+  router.get('/:id/actions',(req, res,next) => {
+    Projects.getProjectActions(req.params.id)
+            .then(project => {
+                if (project) {
+                    res.json(project)
+                    
+                } else {
+                    res.status(404)
+                    
+                }
+
+            })
+            .catch(next)
+
+  })
+
+module.exports = router;

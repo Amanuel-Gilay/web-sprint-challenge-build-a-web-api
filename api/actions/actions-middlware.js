@@ -1,25 +1,25 @@
-// add middlewares here related to actions
-const actions = require("./actions-model");
-async function validateactonsId (req, res, next) {
+// // add middlewares here related to actions
+const Actions = require("./actions-model");
+async function validateActionsId (req, res, next) {
     try {
-        const actions = await actionss.get(req.params.id)
-        if (!actions) {
+        const action = await Actions.get(req.params.id)
+        if (!action) {
             res.status(404).json({ message: 'no such user'})
         } else {
-            req.actions = actions
-            res.json(actions)
+            req.action = action
+            res.json(action)
             next()
         }
     } catch (error) {
         next()
     }
 }
-function validateactionsId (req, res, next) {
-    const { name, description } = req.body
-    if (!name || !description) {
+function validateActions (req, res, next) {
+    const { notes , description } = req.body
+    if (!notes && !description) {
         res.status(400).json({ message: 'body is missing name'})
     } else {
         next()
     }
 }
-module.exports= {validateactionsId, validateacton}
+module.exports= {validateActionsId, validateActions}
